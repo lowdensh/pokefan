@@ -1,0 +1,180 @@
+
+.normal {
+    background-color: #a8a878;
+}
+.normal-dark {
+    background-color: #77624e;
+}
+.normal-light {
+    background-color: #ccccae;
+}
+
+.fighting {
+    background-color: #c03028;
+}
+.fighting-dark {
+    background-color: #663c34;
+}
+.fighting-light {
+    background-color: #dc5e2c;
+}
+
+.flying {
+    background-color: #a890f0;
+}
+.flying-dark {
+    background-color: #775fa3;
+}
+.flying-light {
+    background-color: #c0b4f6;
+}
+
+.poison {
+    background-color: #a040a0;
+}
+.poison-dark {
+    background-color: #5d3a64;
+}
+.poison-light {
+    background-color: #c065ae;
+}
+
+.ground {
+    background-color: #e0c068;
+}
+.ground-dark {
+    background-color: #937337;
+}
+.ground-light {
+    background-color: #f2ea74;
+}
+
+.rock {
+    background-color: #b8a038;
+}
+.rock-dark {
+    background-color: #947632;
+}
+.rock-light {
+    background-color: #cfb254;
+}
+
+.bug {
+    background-color: #a8b820;
+}
+.bug-dark {
+    background-color: #7e9512;
+}
+.bug-light {
+    background-color: #ccd62c;
+}
+
+.ghost {
+    background-color: #705898;
+}
+.ghost-dark {
+    background-color: #58456e;
+}
+.ghost-light {
+    background-color: #9078cb;
+}
+
+.steel {
+    background-color: #b8b8d0;
+}
+.steel-dark {
+    background-color: #8e8888;
+}
+.steel-light {
+    background-color: #d0d0c4;
+}
+
+.fire {
+    background-color: #f08030;
+}
+.fire-dark {
+    background-color: #d4512b;
+}
+.fire-light {
+    background-color: #f4ae30;
+}
+
+.water {
+    background-color: #6890f0;
+}
+.water-dark {
+    background-color: #7a7e90;
+}
+.water-light {
+    background-color: #8cc6de;
+}
+
+.grass {
+    background-color: #78c850;
+}
+.grass-dark {
+    background-color: #659e46;
+}
+.grass-light {
+    background-color: #a2e459;
+}
+
+.electric {
+    background-color: #f8d030;
+}
+.electric-dark {
+    background-color: #c8ac36;
+}
+.electric-light {
+    background-color: #f8ee66;
+}
+
+.psychic {
+    background-color: #f85888;
+}
+.psychic-dark {
+    background-color: #bb5c70;
+}
+.psychic-light {
+    background-color: #f8949f;
+}
+
+.ice {
+    background-color: #98d8d8;
+}
+.ice-dark {
+    background-color: #92a2ae;
+}
+.ice-light {
+    background-color: #c2f0e4;
+}
+
+.dragon {
+    background-color: #7038f8;
+}
+.dragon-dark {
+    background-color: #5838bb;
+}
+.dragon-light {
+    background-color: #9a74f8;
+}
+
+.dark {
+    background-color: #705848;
+}
+.dark-dark {
+    background-color: #52463c;
+}
+.dark-light {
+    background-color: #9a946c;
+}
+
+.fairy {
+    background-color: #ff65d5;
+}
+.fairy-dark {
+    background-color: #b87581;
+}
+.fairy-light {
+    background-color: #f8b0de;
+}

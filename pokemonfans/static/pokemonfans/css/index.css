@@ -1,0 +1,54 @@
+
+.modal {
+    color: black;
+}
+
+.accordion .card-header {
+    color: #96372f;
+}
+.accordion .card-header:hover {
+    color: #e67a07;
+    background-color: #343a40;
+    cursor: pointer;
+}
+
+.trainer-list .card-header {
+    color: #17a2b8;
+    border-top: 1px solid #2d3338;
+}
+.trainer-list .card-header:hover {
+    color: #e67a07;
+    background-color: #343a40;
+    cursor: pointer;
+}
+
+.orange {
+    color: #e67a07;
+}
+
+.accordion .expanded {
+    color: #e67a07;
+    background-color: #343a40;
+    border-left: 5px solid #e67a07;
+}
+.trainer-list .expanded {
+    color: #e67a07;
+    background-color: #343a40;
+    border-left: 5px solid #e67a07;
+    border-right: 5px solid #e67a07;
+}
+
+.type {
+    display: inline;
+    padding-left: 4px;
+    padding-right: 4px;
+    font-family: 'VT323', monospace;
+    color: #2d3338;
+    border: 1px solid #2d3338;
+    border-radius: 4px;
+}
+
+.vt323 {
+    font-family: 'VT323', monospace;
+    letter-spacing: 1px;
+}

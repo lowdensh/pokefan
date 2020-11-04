@@ -1,0 +1,812 @@
+{% extends "pokemonfans/base.html" %}
+{% load static %}
+{% block extrahead %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'css/type-colors.css' %}">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=VT323&display=swap">
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5 mb-5">
+
+<img src="{% static 'images/logo.png' %}" width="50%" class="mx-auto mb-3 d-block">
+
+<!--==========================================================================
+    SECTION 1
+    POKÉMON CARDS
+============================================================================-->
+
+<!--Pokémon Cards Accordion-->
+<div class="accordion">
+    {% for pokemon in pokemon_list %}
+    <div class="card bg-dark" id="{{pokemon.no}}">
+        <!--Card header-->
+        <div class="card-header">
+            <div class="row">
+                <div class="col-1">
+                    {% if pokemon.image %}
+                        <img class="float-left card-image" src="{{pokemon.image.url}}">
+                    {% else %}
+                        <img class="float-left card-image" src="">
+                    {% endif %}
+                </div>
+                <div class="col-11">
+                    <h3 class="card-name">{{ pokemon.name }}</h3>
+                </div>
+            </div>
+        </div>
+        <!--Card body-->
+        <div class="card-body container" style="display: none;">
+            <!-- first row: pokémon info -->
+            <div class="row">
+                <!--left column: text-->
+                <div class="col-8">
+                    <!--details-->
+                    <div class="row m-1">
+                        <div class="col-2 text-left">
+                            <h5 class="card-number">{{ pokemon.number }}</h5>
+                        </div>
+                        <div class="col-4 text-center">
+                            <h5 class="card-name-jp">{{ pokemon.name_jp }}</h5>
+                        </div>
+                        <div class="col-6 text-center">
+                            <h5>
+                                <span class="type card-type-1">{{ pokemon.type_1 }}</span>
+                                <span class="type card-type-2">{{ pokemon.type_2 }}</span>
+                            </h5>
+                        </div>
+                    </div>
+                    <!--description-->
+                    <div class="row m-1 text-justify">
+                        <span class="card-description">{{ pokemon.description }}</span>
+                    </div>
+                </div>
+                <!--right column: image-->
+                <div class="col-4">
+                    {% if pokemon.image_large %}
+                        <img class="float-left card-image-large" src="{{pokemon.image_large.url}}">
+                    {% else %}
+                        <img class="float-left card-image-large" src="">
+                    {% endif %}
+                </div>
+            </div>
+            <!-- END first row -->
+            <!-- second row: buttons -->
+            <div class="row mt-3 mb-3">
+                <div class="col text-center">
+                    <button type="button"
+                            data-id="{{ pokemon.no }}"
+                            class="btn pokemon-fans btn-outline-info"
+                            data-toggle="modal"
+                            data-target="#modal-fans">
+                        Fans
+                    </button>
+                    <button type="button"
+                            data-url="{% url 'pokemon api edit' 0 %}"
+                            class="btn edit-pokemon btn-outline-warning ml-2">
+                            <!-- data-toggle="modal" -->
+                            <!-- data-target="#modal-edit-pokemon"> -->
+                        Edit
+                    </button>
+                    <button type="button"
+                            data-url="{% url 'pokemon api delete' 0 %}"
+                            class="btn delete-pokemon btn-outline-danger ml-2"
+                            data-toggle="modal"
+                            data-target="#modal-delete-pokemon">
+                        Delete
+                    </button>
+                </div>
+            </div>
+            <!-- END second row -->
+        </div>
+    </div>
+    {% endfor %}
+</div>
+<!--END Pokémon Cards Accordion-->
+
+
+<!--Fans modal-->
+<div class="modal fade" id="modal-fans" tabindex="-1" role="dialog" aria-labelledby="modal-fans-label" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title text-info" id="modal-fans-label">Pokémon has N fans!</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body text-center">
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Close</button>
+    </div>
+</div>
+</div>
+</div>
+
+
+<!--Delete Pokémon modal-->
+<div class="modal fade" id="modal-delete-pokemon" tabindex="-1" role="dialog" aria-labelledby="modal-delete-pokemon-label" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title text-danger" id="modal-delete-pokemon-label">Delete Pokémon</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        Are you sure you want to delete this Pokémon?
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="submit" class="btn delete btn-danger">Delete</button>
+    </div>
+</div>
+</div>
+</div>
+
+
+<!--Add Pokémon button-->
+<div class="container mt-5 text-center">
+    <button type="button"
+            class="btn btn-outline-success btn-lg"
+            data-toggle="modal"
+            data-target="#modal-add-pokemon">
+        Add Pokémon
+    </button>
+</div>
+
+
+<!--Add Pokémon modal-->
+<div class="modal fade" id="modal-add-pokemon" tabindex="-1" role="dialog" aria-labelledby="modal-add-pokemon-label" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title text-success" id="modal-add-pokemon-label">Add Pokémon</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <!--Add Pokémon form-->
+        <form class="container" id="add-pokemon" method="POST" enctype="multipart/form-data">
+            <!--no-->
+            <div class="form-row justify-content-center">
+                <div class="form-group col-4">
+                    <label for="add-no"><b>*National No.:</b></label>
+                    <input class="form-control" id="add-no" name="no" type="number" min="1" max="893" required>
+                </div>
+            </div>
+            <!--name, name_jp-->
+            <div class="form-row justify-content-center">
+                <div class="form-group col-6">
+                    <label for="add-name"><b>*English Name:</b></label>
+                    <input class="form-control" id="add-name" name="name" type="text" required>
+                </div>
+                <div class="form-group col-6">
+                    <label for="add-name-jp"><b>*Japanese Name:</b></label>
+                    <input class="form-control" id="add-name-jp" name="name-jp" type="text" required>
+                </div>
+            </div>
+            <!--type_1, type_2-->
+            <div class="form-row justify-content-center">
+                <div class="form-group col-6">
+                    <label for="add-type-1"><b>*Type 1:</b></label>
+                    <select class="form-control" id="add-type-1" name="type-1" required>
+                        <option selected>Select a type</option>
+                        <option>???</option>
+                        <option>Bug</option>
+                        <option>Dark</option>
+                        <option>Dragon</option>
+                        <option>Electric</option>
+                        <option>Fairy</option>
+                        <option>Fighting</option>
+                        <option>Fire</option>
+                        <option>Flying</option>
+                        <option>Ghost</option>
+                        <option>Grass</option>
+                        <option>Ground</option>
+                        <option>Ice</option>
+                        <option>Normal</option>
+                        <option>Poison</option>
+                        <option>Psychic</option>
+                        <option>Rock</option>
+                        <option>Steel</option>
+                        <option>Water</option>
+                    </select>
+                </div>
+                <div class="form-group col-6">
+                    <label for="add-type-2">Type 2:</label>
+                    <select class="form-control" id="add-type-2" name="type-2">
+                        <option selected>Select a type</option>
+                        <option>???</option>
+                        <option>Bug</option>
+                        <option>Dark</option>
+                        <option>Dragon</option>
+                        <option>Electric</option>
+                        <option>Fairy</option>
+                        <option>Fighting</option>
+                        <option>Fire</option>
+                        <option>Flying</option>
+                        <option>Ghost</option>
+                        <option>Grass</option>
+                        <option>Ground</option>
+                        <option>Ice</option>
+                        <option>Normal</option>
+                        <option>Poison</option>
+                        <option>Psychic</option>
+                        <option>Rock</option>
+                        <option>Steel</option>
+                        <option>Water</option>
+                    </select>
+                </div>
+            </div>
+            <!--description-->
+            <div class="form-row justify-content-center">
+                <div class="form-group col-12">
+                    <label for="add-description"><b>*Description:</b></label>
+                    <textarea class="form-control" id="add-description" name="description" rows="5" required></textarea>
+                </div>
+            </div>
+            <!--image, image_large-->
+            <div class="form-row justify-content-center mt-3">
+                <div class="form-group col-6">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="add-image" name="image">
+                        <label class="custom-file-label" for="add-image">Small sprite</label>
+                    </div>
+                </div>
+                <div class="form-group col-6">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="add-image-large" name="image-large">
+                        <label class="custom-file-label" for="add-image-large">Large image</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- fake footer inside form -->
+            <hr>
+            <div class="form-row text-right mt-3">
+                <div class="form-group col">
+                    <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit"
+                            data-url="{% url 'pokemon api add' %}"
+                            class="btn add-pokemon btn-success">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+        </form>
+        <!--END Add Pokémon form-->
+    </div>
+</div>
+</div>
+</div>
+<!--END Add Pokémon modal-->
+
+
+<!--Edit Pokémon modal-->
+<!-- <div class="modal fade" id="modal-edit-pokemon" tabindex="-1" role="dialog" aria-labelledby="modal-edit-pokemon-label" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title text-warning" id="modal-edit-pokemon-label">Edit Pokémon</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        EDIT POKEMON FORM GOES HERE!
+    </div>
+</div>
+</div>
+</div> -->
+<!--END Edit Pokémon modal-->
+
+
+<!-- Edit Pokémon container -->
+<div class="container edit-pokemon pt-5" style="display: none;">
+<div class="row justify-content-center">
+<div class="col-7 bg-white text-dark rounded">
+    <!--Edit Pokémon form-->
+    <form class="container" id="edit-pokemon" action="{% static 'pokemonfans/scripts/edit-pokemon.js' %}" method="POST" enctype="multipart/form-data">
+        <!-- fake header inside form -->
+        <div class="row mt-4">
+            <div class="col">
+                <h5 class="text-warning">Edit Pokemon</h5>
+            </div>
+        </div>
+        <hr>
+
+        <!--no-->
+        <div class="form-row justify-content-center">
+            <div class="form-group col-4">
+                <label for="edit-no">National No.:</label>
+                <input class="form-control" id="edit-no" name="no" type="number" min="1" max="893" disabled>
+            </div>
+        </div>
+        <!--name, name_jp-->
+        <div class="form-row justify-content-center">
+            <div class="form-group col-6">
+                <label for="edit-name">English Name:</label>
+                <input class="form-control" id="edit-name" name="name" type="text" required>
+            </div>
+            <div class="form-group col-6">
+                <label for="edit-name-jp">Japanese Name:</label>
+                <input class="form-control" id="edit-name-jp" name="name-jp" type="text" required>
+            </div>
+        </div>
+        <!--type_1, type_2-->
+        <div class="form-row justify-content-center">
+            <div class="form-group col-6">
+                <label for="edit-type-1">Type 1:</label>
+                <select class="form-control" id="edit-type-1" name="type-1" required>
+                    <option selected>Select a type</option>
+                    <option>???</option>
+                    <option>Bug</option>
+                    <option>Dark</option>
+                    <option>Dragon</option>
+                    <option>Electric</option>
+                    <option>Fairy</option>
+                    <option>Fighting</option>
+                    <option>Fire</option>
+                    <option>Flying</option>
+                    <option>Ghost</option>
+                    <option>Grass</option>
+                    <option>Ground</option>
+                    <option>Ice</option>
+                    <option>Normal</option>
+                    <option>Poison</option>
+                    <option>Psychic</option>
+                    <option>Rock</option>
+                    <option>Steel</option>
+                    <option>Water</option>
+                </select>
+            </div>
+            <div class="form-group col-6">
+                <label for="edit-type-2">Type 2:</label>
+                <select class="form-control" id="edit-type-2" name="type-2">
+                    <option selected>Select a type</option>
+                    <option>???</option>
+                    <option>Bug</option>
+                    <option>Dark</option>
+                    <option>Dragon</option>
+                    <option>Electric</option>
+                    <option>Fairy</option>
+                    <option>Fighting</option>
+                    <option>Fire</option>
+                    <option>Flying</option>
+                    <option>Ghost</option>
+                    <option>Grass</option>
+                    <option>Ground</option>
+                    <option>Ice</option>
+                    <option>Normal</option>
+                    <option>Poison</option>
+                    <option>Psychic</option>
+                    <option>Rock</option>
+                    <option>Steel</option>
+                    <option>Water</option>
+                </select>
+            </div>
+        </div>
+        <!--description-->
+        <div class="form-row justify-content-center">
+            <div class="form-group col-12">
+                <label for="edit-description">Description:</label>
+                <textarea class="form-control" id="edit-description" name="description" rows="5" required></textarea>
+            </div>
+        </div>
+        <!--image, image_large-->
+        <!-- <div class="form-row justify-content-center mt-3">
+            <div class="form-group col-6">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="edit-image" name="image">
+                    <label class="custom-file-label" for="edit-image">Small sprite</label>
+                </div>
+            </div>
+            <div class="form-group col-6">
+                <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="edit-image-large" name="image-large">
+                    <label class="custom-file-label" for="edit-image-large">Large image</label>
+                </div>
+            </div>
+        </div> -->
+
+        <!-- fake footer inside form -->
+        <hr>
+        <div class="form-row text-right mt-3">
+            <div class="form-group col">
+                <button type="button" class="btn cancel-edit btn-secondary">Cancel</button>
+                <button type="submit"
+                        data-url="{% url 'pokemon api edit' 0 %}"
+                        class="btn go-edit-pokemon btn-warning">
+                    Edit
+                </button>
+            </div>
+        </div>
+
+    </form>
+    <!--END Edit Pokémon form-->
+</div>
+</div>
+</div>
+<!-- END Edit Pokémon container -->
+
+
+<!--==========================================================================
+    SECTION 2
+    TRAINER LOUNGE
+============================================================================-->
+
+<!-- Trainer container -->
+<div class="container trainer-container mt-5 px-0">
+
+    <!--Header-->
+    <div class="card bg-dark"><div class="card-header"><div class="row">
+        <div class="col-1">
+            <img src="https://cdn.bulbagarden.net/upload/f/f6/Dawnwalkdown.png" height="100%">
+        </div>
+        <div class="col-11">
+            <h3 class="text-info">Trainer Lounge</h3>
+        </div>
+    </div></div></div>
+
+    <!--Content-->
+    <div class="container mt-3"><div class="row">
+        
+        <!--left column: Trainer list-->
+        <div class="col-5 p-0 trainer-list">
+            {% for trainer in trainer_list %}
+                <h3 class="card-header mb-3 text-center vt323 rounded" data-id="{{ trainer.id }}">
+                    {{ trainer.name }}
+                </h3>
+            {% endfor %}
+        </div>
+
+        <!--right column: individual Trainer card display-->
+        <div class="col-7 pr-0"><div id="trainer-card" class="card bg-dark">
+            
+            <!-- Header -->
+            <h3 id="tc-name" data-id="" class="card-header text-center text-info vt323">name</h3>
+
+            <!-- Body: Trainer details -->
+            <div class="card-body vt323"><div class="row">
+                <div class="col-9">
+                    <div class="row">
+                        <div class="col-5">Date Joined:</div>
+                        <div class="col-7" id="tc-join-date">date</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">Home Region:</div>
+                        <div class="col-7" id="tc-region">region</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-5">Fav Core Series:</div>
+                        <div class="col-7" id="tc-series">series</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <img id="tc-avatar" height="80" src="">
+                </div>
+            </div></div>
+
+            <!-- Body: Trainer pokemon_set -->
+            <div id="tc-pokemon-set" class="card-body text-center" 
+                style="border-top: 1px solid #2d3338;">
+            </div>
+            
+            <!-- Footer -->
+            <div class="card-footer text-right">
+                <button type="button"
+                        class="btn edit-trainer btn-outline-warning ml-2"
+                        data-toggle="modal"
+                        data-target="#modal-edit-trainer">
+                    Edit
+                </button>
+                <button type="button"
+                        class="btn delete-trainer btn-outline-danger ml-2"
+                        data-toggle="modal"
+                        data-target="#modal-delete-trainer">
+                    Delete
+                </button>
+            </div>
+            
+        </div></div>
+        <!--END right column: individual Trainer display-->
+    </div></div>
+    <!--END Content-->
+</div>
+<!-- END Trainer container -->
+
+
+<!--Delete Trainer modal-->
+<div class="modal fade" id="modal-delete-trainer" tabindex="-1" role="dialog" aria-labelledby="modal-delete-trainer-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title text-danger" id="modal-delete-trainer-label">Delete Trainer</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to delete this Trainer?
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn delete btn-danger">Delete</button>
+        </div>
+    </div>
+    </div>
+    </div>
+
+
+<!--Add Trainer button-->
+<div class="container mt-5 text-center">
+    <button type="button"
+            class="btn btn-outline-success btn-lg"
+            data-toggle="modal"
+            data-target="#modal-add-trainer">
+        Add Trainer
+    </button>
+</div>
+
+
+<!--Add Trainer modal-->
+<div class="modal fade" id="modal-add-trainer" tabindex="-1" role="dialog" aria-labelledby="modal-add-trainer-label" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title text-success" id="modal-add-trainer-label">Add Trainer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <!--Add Pokémon form-->
+        <form class="container" id="add-trainer" method="POST" enctype="multipart/form-data">
+            <!--display name-->
+            <div class="form-row form-group justify-content-center">
+                <div class="col">
+                    <label for="t-add-name"><b>*Display Name:</b></label>
+                    <input class="form-control" id="t-add-name" name="name" type="text" required>
+                    <small class="form-text text-muted">25 characters of whatever you want! This just needs to be unique.</small>
+                </div>
+            </div>
+            
+            <!--avatar-->
+            <div class="form-row mt-4 form-group justify-content-center">
+                <div class="col-6">
+                    <label for="t-add-avatar"><b>*Avatar:</b></label>
+                    <select class="form-control" id="t-add-avatar" name="avatar" required>
+                        <option selected value="trainer_images/gen1_female.webp">Gen I: Leaf (F)</option>
+                        <option value="trainer_images/gen1_male.webp">Gen I: Red (M)</option>
+                        <option value="trainer_images/gen2_female.webp">Gen II: Lyra (F)</option>
+                        <option value="trainer_images/gen2_male.webp">Gen II: Ethan (M)</option>
+                        <option value="trainer_images/gen3_female.webp">Gen III: May (F)</option>
+                        <option value="trainer_images/gen3_male.webp">Gen III: Brendan (M)</option>
+                        <option value="trainer_images/gen4_female.webp">Gen IV: Dawn (F)</option>
+                        <option value="trainer_images/gen4_male.webp">Gen IV: Lucas (M)</option>
+                        <option value="trainer_images/gen5_female.webp">Gen V: Hilda (F)</option>
+                        <option value="trainer_images/gen5_male.webp">Gen V: Hilbert (M)</option>
+                    </select>
+                </div>
+                <!--avatar preview-->
+                <div class="col-6 text-center">
+                    <img id="t-add-avatar-preview" height="80" src="/media/trainer_images/gen1_female.webp">
+                </div>
+            </div>
+
+            <div class="form-row mt-4 justify-content-center">
+                <!--home region-->
+                <div class="col-6 form-group">
+                    <label for="t-add-region"><b>*Home Region:</b></label>
+                    <select class="form-control" id="t-add-region" name="region" required>
+                        <option selected value="gen1_kanto">Kanto</option>
+                        <option value="gen2_johto">Johto</option>
+                        <option value="gen3_hoenn">Hoenn</option>
+                        <option value="gen4_sinnoh">Sinnoh</option>
+                        <option value="gen5_unova">Unova</option>
+                        <option value="gen6_kalos">Kalos</option>
+                        <option value="gen7_alola">Alola</option>
+                        <option value="gen8_galar">Galar</option>
+                    </select>
+                </div>
+                <!--favourite core game series-->
+                <div class="col-6 form-group">
+                    <label for="t-add-series"><b>*Fav Core Series:</b></label>
+                    <select class="form-control" id="t-add-series" name="series" required>
+                        <option selected value="gen1_rby">Red/Blue/Yellow</option>
+                        <option value="gen2_gsc">Gold/Silver/Crystal</option>
+                        <option value="gen3_rse">Ruby/Sapphire/Emerald</option>
+                        <option value="gen4_dpp">Diamond/Pearl/Platinum</option>
+                        <option value="gen5_bw">Black/White</option>
+                        <option value="gen6_xy">X/Y</option>
+                        <option value="gen7_sm">Sun/Moon</option>
+                        <option value="gen8_swsh">Sword/Shield</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!--fan of pokemon-->
+            <hr>
+            <div class="form-row mt-4 form-group justify-content-center">
+                <h5 class="mb-0">Who is this trainer a fan of?</h5><br>
+                <small class="form-text text-muted">Pick any number of Pokémon, or none if you want.</small>
+            </div>
+            <div class="form-row form-group justify-content-center">
+                <div class="col-6">
+                    <select class="form-control" id="t-add-fan-of" name="fan-of" multiple>
+                        {% for pokemon in pokemon_list %}
+                            <option data-id={{pokemon.no}} value="{{pokemon.image.url}}">{{pokemon.number}} {{pokemon.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">Hold down "Control", or "Command" on a Mac, to select more than one.</small>
+                </div>
+                <!--pokemon preview-->
+                <div id="t-add-fan-of-preview" class="col-6 text-center align-middle">
+                </div>
+            </div>
+
+            <!-- fake footer inside form -->
+            <hr>
+            <div class="form-row text-right mt-3">
+                <div class="form-group col">
+                    <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit"
+                            data-url="{% url 'trainer api add' %}"
+                            class="btn add-trainer btn-success">
+                        Add
+                    </button>
+                </div>
+            </div>
+
+        </form>
+        <!--END Add Trainer form-->
+    </div>
+</div>
+</div>
+</div>
+<!--END Add Trainer modal-->
+
+
+<!--Edit Trainer modal-->
+<div class="modal fade" id="modal-edit-trainer" tabindex="-1" role="dialog" aria-labelledby="modal-edit-trainer-label" aria-hidden="true">
+<div class="modal-dialog modal-dialog-centered" role="document">
+<div class="modal-content">
+    <div class="modal-header">
+        <h5 class="modal-title text-warning" id="modal-edit-trainer-label">Edit Trainer</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+
+        <!--Edit Trainer form-->
+        <form class="container" id="edit-trainer" method="POST" enctype="multipart/form-data">
+            <!--display name-->
+            <div class="form-row form-group justify-content-center">
+                <div class="col">
+                    <label for="t-edit-name"><b>*Display Name:</b></label>
+                    <input class="form-control" id="t-edit-name" name="name" type="text" required>
+                    <small class="form-text text-muted">25 characters of whatever you want! This just needs to be unique.</small>
+                </div>
+            </div>
+            
+            <!--avatar-->
+            <div class="form-row mt-4 form-group justify-content-center">
+                <div class="col-6">
+                    <label for="t-edit-avatar"><b>*Avatar:</b></label>
+                    <select class="form-control" id="t-edit-avatar" name="avatar" required>
+                        <option selected value="trainer_images/gen1_female.webp">Gen I: Leaf (F)</option>
+                        <option value="trainer_images/gen1_male.webp">Gen I: Red (M)</option>
+                        <option value="trainer_images/gen2_female.webp">Gen II: Lyra (F)</option>
+                        <option value="trainer_images/gen2_male.webp">Gen II: Ethan (M)</option>
+                        <option value="trainer_images/gen3_female.webp">Gen III: May (F)</option>
+                        <option value="trainer_images/gen3_male.webp">Gen III: Brendan (M)</option>
+                        <option value="trainer_images/gen4_female.webp">Gen IV: Dawn (F)</option>
+                        <option value="trainer_images/gen4_male.webp">Gen IV: Lucas (M)</option>
+                        <option value="trainer_images/gen5_female.webp">Gen V: Hilda (F)</option>
+                        <option value="trainer_images/gen5_male.webp">Gen V: Hilbert (M)</option>
+                    </select>
+                </div>
+                <!--avatar preview-->
+                <div class="col-6 text-center">
+                    <img id="t-edit-avatar-preview" height="80" src="/media/trainer_images/gen1_female.webp">
+                </div>
+            </div>
+
+            <div class="form-row mt-4 justify-content-center">
+                <!--home region-->
+                <div class="col-6 form-group">
+                    <label for="t-edit-region"><b>*Home Region:</b></label>
+                    <select class="form-control" id="t-edit-region" name="region" required>
+                        <option selected value="gen1_kanto">Kanto</option>
+                        <option value="gen2_johto">Johto</option>
+                        <option value="gen3_hoenn">Hoenn</option>
+                        <option value="gen4_sinnoh">Sinnoh</option>
+                        <option value="gen5_unova">Unova</option>
+                        <option value="gen6_kalos">Kalos</option>
+                        <option value="gen7_alola">Alola</option>
+                        <option value="gen8_galar">Galar</option>
+                    </select>
+                </div>
+                <!--favourite core game series-->
+                <div class="col-6 form-group">
+                    <label for="t-edit-series"><b>*Fav Core Series:</b></label>
+                    <select class="form-control" id="t-edit-series" name="series" required>
+                        <option selected value="gen1_rby">Red/Blue/Yellow</option>
+                        <option value="gen2_gsc">Gold/Silver/Crystal</option>
+                        <option value="gen3_rse">Ruby/Sapphire/Emerald</option>
+                        <option value="gen4_dpp">Diamond/Pearl/Platinum</option>
+                        <option value="gen5_bw">Black/White</option>
+                        <option value="gen6_xy">X/Y</option>
+                        <option value="gen7_sm">Sun/Moon</option>
+                        <option value="gen8_swsh">Sword/Shield</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!--fan of pokemon-->
+            <hr>
+            <div class="form-row mt-4 form-group justify-content-center">
+                <h5 class="mb-0">Who is this trainer a fan of?</h5><br>
+                <small class="form-text text-muted">Pick any number of Pokémon, or none if you want.</small>
+            </div>
+            <div class="form-row form-group justify-content-center">
+                <div class="col-6">
+                    <select class="form-control" id="t-edit-fan-of" name="fan-of" multiple>
+                        {% for pokemon in pokemon_list %}
+                            <option data-id={{pokemon.no}} value="{{pokemon.image.url}}">{{pokemon.number}} {{pokemon.name}}</option>
+                        {% endfor %}
+                    </select>
+                    <small class="form-text text-muted">Hold down "Control", or "Command" on a Mac, to select more than one.</small>
+                </div>
+                <!--pokemon preview-->
+                <div id="t-edit-fan-of-preview" class="col-6 text-center align-middle">
+                </div>
+            </div>
+
+            <!-- fake footer inside form -->
+            <hr>
+            <div class="form-row text-right mt-3">
+                <div class="form-group col">
+                    <button type="button" class="btn cancel btn-secondary" data-dismiss="modal">Cancel</button>
+                    <button type="submit"
+                            data-url="{% url 'trainer api edit' 0 %}"
+                            class="btn edit-trainer btn-warning">
+                        Edit
+                    </button>
+                </div>
+            </div>
+
+        </form>
+        <!--END Edit Trainer form-->
+    </div>
+</div>
+</div>
+</div>
+<!--END Edit Trainer modal-->
+
+
+
+</div>
+<!-- END main content container -->
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'pokemonfans/scripts/pokemon-type-colors.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/pokemon-card-expand.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/pokemon-add.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/pokemon-fans.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/pokemon-edit.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/pokemon-delete.js' %}"></script>
+
+    <script src="{% static 'pokemonfans/scripts/trainer-card-display.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/trainer-add.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/trainer-edit.js' %}"></script>
+    <script src="{% static 'pokemonfans/scripts/trainer-delete.js' %}"></script>
+{% endblock %}
